@@ -247,6 +247,8 @@ def tmuxRestyle (p : Palette) : IO Unit :=
     , ["set", "-g", "pane-active-border-style", s!"fg={p.base03}"]
     , ["set", "-g", "pane-border-style", s!"fg={p.base03}"]
     , ["set", "-g", "status-style", s!"fg={p.base04},bg=default"]
+    , ["set", "-g", "window-status-style", s!"fg={p.base04},bg=default"]
+    , ["set", "-g", "window-status-current-style", s!"fg={p.base0A},bg=default"]
     , ["set", "-g", "status-right"
       , s!" #[fg={p.base0D}]%H:%M #[fg={p.base0D}]#h#[default] #[fg={p.base0D}]#(whoami)#[default] "]
     , ["set", "-g", "window-status-current-format"
