@@ -616,11 +616,27 @@ def writeControl (cs : ControlState) : IO Unit := do
   IO.FS.createDirAll (← stateDir)
   atomicWrite (← statePath) (ControlState.render cs)
 
+/-- `register` is fixed-point thousandths (0–1000), but the natural CLI
+    spelling is the unit interval. Accept both: `800` (raw thousandths) and
+    `0.8` / `.8` / `1.0` (decimal, ≤3 fraction digits). Clamped to 1000. -/
+def parseRegister? (v : String) : Option Nat :=
+  if v.contains '.' then
+    match v.splitOn "." with
+    | [i, f] =>
+      if f.isEmpty || f.length > 3 then none
+      else
+        let whole := if i.isEmpty then some 0 else i.toNat?
+        whole.bind fun w =>
+          ((f ++ "").pushn '0' (3 - f.length)).toNat?.map fun frac =>
+            min (w * 1000 + frac) 1000
+    | _ => none
+  else v.toNat?.map (min · 1000)
+
 /-- One field update; `none` = unknown key or bad value. -/
 def applySet (t : ThemeVector) : String → String → Option ThemeVector
   | "hero", v => v.toNat?.map fun n => { t with heroHue := n % 360 }
   | "axis", v => v.toNat?.map fun n => { t with axisHue := n % 360 }
-  | "register", v => v.toNat?.map fun n => { t with register := min n 1000 }
+  | "register", v => (parseRegister? v).map fun n => { t with register := n }
   | "ramp", v =>
     v.toNat?.bind fun n =>
       match t.luminance with

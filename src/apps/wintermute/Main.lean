@@ -32,7 +32,7 @@ def usage : String :=
    usage:\n\
      wintermute daemon              watch + reconcile\n\
      wintermute get                 print control state\n\
-     wintermute set KEY VALUE …     KEY ∈ hero axis register ramp polarity level\n\
+     wintermute set KEY VALUE …     KEY ∈ hero axis register ramp polarity level (register: 0–1000 or 0.0–1.0)\n\
      wintermute preset NAME         NAME ∈ {presetNames}\n\
      wintermute apply               one-shot broadcast + persist\n\
      wintermute vectors             emit the conformance palettes (parity gate)\n\
